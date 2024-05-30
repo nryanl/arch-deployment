@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -e  # Exit immediately if a command exits with a non-zero status
+
+# Update the mirror list using reflector
+sudo reflector --verbose --country 'United States' -l 5 --sort rate --save /etc/pacman.d/mirrorlist
+
+# Install yay (AUR helper)
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si --noconfirm
+
+exit
+
+# Use yay to install AUR packages and some extra packages
+yay -S --noconfirm \
+    visual-studio-code-bin \
+    1password \
+    1password-cli \
+    ttf-cascadia-code \
+    otf-cascadia-code \
+    ttf-jetbrains-mono-nerd \
+    ttf-jetbrains-mono \
+    github-desktop-bin \
+    studio-3t \
+    spotify \
+    slack-desktop \
+    telegram-desktop \
+    obs-studio
+
+# Install Flatpak applications
+flatpak install -y flathub io.dbeaver.DBeaverCommunity
+flatpak install -y flathub net.lutris.Lutris
+flatpak install -y flathub com.google.Chrome
+
+echo "Post-installation script completed successfully."
+

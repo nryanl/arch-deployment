@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -e
+
+# Configure /etc/pacman.conf
+PACMAN_CONF="/etc/pacman.conf"
+
+## Uncomment "Color" and add "ILoveCandy"
+sed -i 's/^#Color/Color\nILoveCandy/' "$PACMAN_CONF"
+if ! grep -q "ILoveCandy" "$PACMAN_CONF"; then
+	echo "ILoveCandy" >> "$PACMAN_CONF"
+fi
+
+## Set ParallelDownloads to 10
+sed -i 's/^#ParallelDownloads = 5/ParallelDownloads = 10/' "$PACMAN_CONF"
+
+# Initialize pacman keyring
+pacman-key --init
+
+# Update the package database
+pacman -Syy
+
+# Get the latest python and archinstall
+pacman -S python archinstall --noconfirm
+
+echo "Configuration complete. Running archinstall"
+
+archinstall --config conf/user_configuration.json --creds conf/user_credentials.json
